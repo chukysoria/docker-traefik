@@ -86,6 +86,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
+      - PING_PORT=8080
+      - DOCKER_SOCK=/var/run/docker.sock
     volumes:
       - /path/to/data:/config
       - /path/to/certs:/certs
@@ -104,6 +106,8 @@ docker run -d \
   -e PUID=1000 \
   -e PGID=1000 \
   -e TZ=Etc/UTC \
+  -e PING_PORT=8080 \
+  -e DOCKER_SOCK=/var/run/docker.sock \
   -p 80:80 \
   -p 443:433 \
   -p 8080:8080 \
@@ -124,7 +128,8 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e PUID=1000` | for UserID - see below for explanation |
 | `-e PGID=1000` | for GroupID - see below for explanation |
 | `-e TZ=Etc/UTC` | specify a timezone to use, see this [list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List). |
-| `-e PING_PORT=8080` | Optional, in case ping health check is not published in default endpoint |
+| `-e PING_PORT=8080` | In case ping health check is not published in default endpoint |
+| `-e DOCKER_SOCK=/var/run/docker.sock` | Path to alternative docker sock, useck by Docker provider |
 | `-v /config` | Traefik.yml configuration and file provider repository |
 | `-v /certs` | Folder to store certificates between runs |
 
@@ -237,7 +242,4 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
-* **06.06.23:** - Rebase master to Alpine 3.18, deprecate armhf as per [https://www.linuxserver.io/armhf](https://www.linuxserver.io/armhf).
-* **03.01.23:** - Publish stable release.
-* **20.02.22:** - Rebase develop branch to Alpine.
-* **06.06.21:** - Initial realease.
+* **08.09.23:** - Initial realease.

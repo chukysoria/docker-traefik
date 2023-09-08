@@ -6,3 +6,6 @@ lsiown -R abc:abc \
     /config
 lsiown -R abc:abc \
     /certs
+if [[ -S ${DOCKER_SOCK:-/var/run/docker.sock} ]]; then
+    lsiown -R abc:abc ${DOCKER_SOCK:-/var/run/docker.sock}
+fi
