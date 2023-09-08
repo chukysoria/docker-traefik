@@ -5,36 +5,31 @@ FROM ghcr.io/chukysoria/baseimage-alpine:3.18
 # set version label
 ARG BUILD_DATE
 ARG VERSION
-ARG PROWLARR_RELEASE
+ARG TRAEFIK_VERSION
 LABEL build_version="Chukyserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="Roxedus,thespad"
 
 # environment settings
-ARG PROWLARR_BRANCH="master"
-ENV XDG_CONFIG_HOME="/config/xdg"
+ARG TARGETOS
+ARG TARGETARCH
+ARG TARGETVARIANT
+ARG TRAEFIK_BRANCH="master"
 
 RUN \
-  echo "**** install packages ****" && \
-  apk add -U --upgrade --no-cache \
-    icu-libs \
-    sqlite-libs \
-    xmlstarlet && \
-  echo "**** install prowlarr ****" && \
-  mkdir -p /app/prowlarr/bin && \
-  if [ -z ${PROWLARR_RELEASE+x} ]; then \
-    PROWLARR_RELEASE=$(curl -sL "https://prowlarr.servarr.com/v1/update/${PROWLARR_BRANCH}/changes?runtime=netcore&os=linuxmusl" \
-    | jq -r '.[0].version'); \
+  echo "**** install treafik ****" && \
+  mkdir -p /app/traefik/bin && \
+  mkdir -p /certs && \
+  if [ -z ${TRAEFIK_VERSION+x} ]; then \
+    TRAEFIK_VERSION=$(curl -sX GET "https://api.github.com/repos/traefik/traefik/releases/latest" \
+    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
   fi && \
   curl -o \
-    /tmp/prowlarr.tar.gz -L \
-    "https://prowlarr.servarr.com/v1/update/${PROWLARR_BRANCH}/updatefile?version=${PROWLARR_RELEASE}&os=linuxmusl&runtime=netcore&arch=arm" && \
+    /tmp/traefik.tar.gz -L \
+    "https://github.com/traefik/traefik/releases/download/${TRAEFIK_VERSION}/traefik_${TRAEFIK_VERSION}_${TARGETOS}_${TARGETARCH}${TARGETVARIANT}.tar.gz" && \
   tar xzf \
-    /tmp/prowlarr.tar.gz -C \
-    /app/prowlarr/bin --strip-components=1 && \
-  echo -e "UpdateMethod=docker\nBranch=${PROWLARR_BRANCH}\nPackageVersion=${VERSION}\nPackageAuthor=[linuxserver.io](https://www.linuxserver.io/)" > /app/prowlarr/package_info && \
+    /tmp/traefik.tar.gz -C \
+    /app/traefik/bin && \
   echo "**** cleanup ****" && \
   rm -rf \
-    /app/prowlarr/bin/Prowlarr.Update \
     /tmp/* \
     /var/tmp/*
 
@@ -42,5 +37,9 @@ RUN \
 COPY root/ /
 
 # ports and volumes
-EXPOSE 9696
+EXPOSE 80
+EXPOSE 443
+EXPOSE 8080
+
 VOLUME /config
+VOLUME /certs

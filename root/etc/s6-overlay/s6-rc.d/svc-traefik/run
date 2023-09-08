@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+exec \
+    s6-notifyoncheck -d -n 300 -w 1000 \
+        cd /app/traefik/bin s6-setuidgid abc /app/traefik/bin/traefik \
+        --configfile /config/traefik.yml healthcheck

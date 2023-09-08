@@ -7,10 +7,15 @@ on:
 
 env:
   USER: chukysoria
-  IMAGE: prowlarr
-  DESCRIPTION: "[Prowlarr](https://github.com/Prowlarr/Prowlarr) is a indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Sonarr, Radarr, Lidarr, and Readarr offering complete management of your indexers with no per app Indexer setup required (we do it all)."
-  BUILD_VERSION_ARG: PROWLARR_RELEASE
+  IMAGE: traefik
+  DESCRIPTION: "[Traefik](https://traefik.io/traefik/) is a leading modern reverse proxy and load balancer that makes deploying microservices easy. Traefik integrates with your existing infrastructure components and configures itself automatically and dynamically."
+  BUILD_VERSION_ARG: TRAEFIK_VERSION
   ARCH: arm32v7
+  # Dinamic
+  NOW:
+  EXT_RELEASE:
+  EXT_RELEASE_CLEAN:
+  
 
 jobs:
   build:
@@ -31,7 +36,7 @@ jobs:
 
       - name: Find latest release of app
         run: |
-          echo "EXT_RELEASE=$(curl -sL "https://prowlarr.servarr.com/v1/update/master/changes?runtime=netcore&os=linuxmusl" | jq -r '.[0].version')" >> "$GITHUB_ENV"
+          echo "EXT_RELEASE=$(curl -sX GET "https://api.github.com/repos/traefik/traefik/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]')" >> "$GITHUB_ENV"
   
       - name: Sanite Release version
         run: |
