@@ -39,7 +39,7 @@ Traefik is designed to be as simple as possible to operate, but capable of handl
 
 Run Traefik and let it do the work for you!
 
-[![Traefik](https://traefik.io/static/traefik-proxy-logo--white-82153be41e0ce620a921b4bce974f6d8.svg)](https://traefik.io/traefik/)
+[![Traefik](https://doc.traefik.io/traefik/v2.2/assets/images/traefik-proxy-logo-long.svg)](https://traefik.io/traefik/)
 
 ## Supported Architectures
 
