@@ -1,30 +1,27 @@
 # syntax=docker/dockerfile:1
 
-FROM ghcr.io/chukysoria/baseimage-alpine:3.18
+ARG BUILD_FROM=ghcr.io/chukysoria/baseimage-alpine:v0.2.2
+
+FROM ${BUILD_FROM} 
 
 # set version label
 ARG BUILD_DATE
-ARG VERSION
-ARG TRAEFIK_VERSION
-LABEL build_version="Chukyserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+ARG BUILD_VERSION
+ARG BUILD_EXT_RELEASE="2.10.3"
+LABEL build_version="Chukyserver.io version:- ${BUILD_VERSION} Build-date:- ${BUILD_DATE}"
 
 # environment settings
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
-ARG TRAEFIK_BRANCH="master"
 
 RUN \
   echo "**** install treafik ****" && \
   mkdir -p /app/traefik/bin && \
   mkdir -p /certs && \
-  if [ -z ${TRAEFIK_VERSION+x} ]; then \
-    TRAEFIK_VERSION=$(curl -sX GET "https://api.github.com/repos/traefik/traefik/releases/latest" \
-    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
-  fi && \
   curl -o \
     /tmp/traefik.tar.gz -L \
-    "https://github.com/traefik/traefik/releases/download/${TRAEFIK_VERSION}/traefik_${TRAEFIK_VERSION}_${TARGETOS}_${TARGETARCH}${TARGETVARIANT}.tar.gz" && \
+    "https://github.com/traefik/traefik/releases/download/${BUILD_EXT_RELEASE}/traefik_${BUILD_EXT_RELEASE}_${TARGETOS}_${TARGETARCH}${TARGETVARIANT}.tar.gz" && \
   tar xzf \
     /tmp/traefik.tar.gz -C \
     /app/traefik/bin && \
