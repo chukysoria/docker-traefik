@@ -40,4 +40,7 @@ EXPOSE 443
 EXPOSE 8080
 
 VOLUME /config
+
 VOLUME /certs
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=2m --start-interval=5s --retries=5 CMD ["/etc/s6-overlay/s6-rc.d/svc-traefik/data/check"]
