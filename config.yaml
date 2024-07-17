@@ -3,7 +3,7 @@ image: traefik
 version: v1.0.5
 name: Traefik
 description: "[Traefik](https://traefik.io/traefik/) is a leading modern reverse proxy and load balancer that makes deploying microservices easy. Traefik integrates with your existing infrastructure components and configures itself automatically and dynamically."
-ext_release: v3.0.3
+ext_release: v3.1.0
 arch:
   - aarch64
   - x86_64
